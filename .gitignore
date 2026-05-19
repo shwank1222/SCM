@@ -1,0 +1,116 @@
+# Visual Studio
+.vs/
+*.VC.db
+*.VC.opendb
+*.suo
+*.user
+*.userprefs
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# Unreal Engine Generated Folders
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# Build files
+Build/*
+
+# Ignore all generated project files
+*.xcodeproj
+*.xcworkspace
+*.sln
+*.opensdf
+*.sdf
+*.ipch
+
+# Unreal Engine specific
+*.tmp
+*.log
+*.dmp
+
+# Auto-generated config backups
+Saved/Config/
+Saved/Autosaves/
+Saved/Backup/
+Saved/Logs/
+Saved/Temp/
+
+# Crash reports
+Saved/Crashes/
+
+# Cooked data
+Saved/Cooked/
+Saved/StagedBuilds/
+
+# Packaging
+*.pak
+*.sig
+
+# Ignore compiled source
+*.obj
+*.o
+*.so
+*.dll
+*.lib
+*.exp
+*.exe
+*.app
+*.ipa
+
+# Mac
+.DS_Store
+
+# Linux
+*~
+
+# Rider Link
+Plugins/Developer/RiderLink/
+
+# Unreal Engine cache
+DerivedDataCache/
+Engine/DerivedDataCache/
+
+# Optional: Ignore marketplace plugins binaries
+Plugins/*/Binaries/
+Plugins/*/Intermediate/
+
+# Keep plugin source/config/content
+!Plugins/*/Source/
+!Plugins/*/Content/
+!Plugins/*/Config/
+
+# Ignore local environment files
+.env
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Ignore profiling/debugging
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Ignore HLOD / generated assets
+*_BuiltData.uasset
+
+# Ignore test reports
+TestResults/
+
+# Keep important UE folders
+!Source/
+!Config/
+!Content/
+!Plugins/
+
+# Git LFS recommendation for large assets
+# *.uasset filter=lfs diff=lfs merge=lfs -text
+# *.umap filter=lfs diff=lfs merge=lfs -text
