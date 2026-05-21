@@ -12,7 +12,7 @@ struct FInteractionCandidate
 	GENERATED_BODY()
 
 	UPROPERTY()
-	TObjectPtr<UInteractableComponent> Interactable = nullptr;
+	TWeakObjectPtr<UInteractableComponent> Interactable = nullptr;
 
 	UPROPERTY()
 	float Dot = 0.f;
@@ -38,7 +38,7 @@ public:
 			return nullptr;
 		}
 
-		return VisibleInteractables[CurrentSelectionIndex].Interactable;
+		return VisibleInteractables[CurrentSelectionIndex].Interactable.Get();
 	}
 
 #pragma region Interaction Management
@@ -49,13 +49,13 @@ public:
 
 protected:
 	UPROPERTY()
-	TArray<TObjectPtr<UInteractableComponent>> NearbyInteractables;
+	TArray<TWeakObjectPtr<UInteractableComponent>> NearbyInteractables;
 
 	UPROPERTY()
 	TArray<FInteractionCandidate> VisibleInteractables;
 
 	UPROPERTY()
-	TArray<TObjectPtr<UInteractableComponent>> PreviousVisibleInteractables;
+	TArray<TWeakObjectPtr<UInteractableComponent>> PreviousVisibleInteractables;
 
 	UPROPERTY()
 	int32 CurrentSelectionIndex = 0;

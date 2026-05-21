@@ -78,9 +78,13 @@ void UInteractionComponent::RemoveInteractable( UInteractableComponent* Interact
 void UInteractionComponent::UpdateVisibleInteractables()
 {
 	VisibleInteractables.Empty();
+	NearbyInteractables.RemoveAll(
+		[](const TWeakObjectPtr<UInteractableComponent>& Ptr)
+		{
+			return !Ptr.IsValid();
+		});
 
 	AActor* OwnerActor = GetOwner();
-
 	if (!OwnerActor){ return; }
 
 	FVector ViewLocation;
@@ -90,9 +94,14 @@ void UInteractionComponent::UpdateVisibleInteractables()
 
 	const FVector ForwardVector = ViewRotation.Vector();
 
-	for (UInteractableComponent* Interactable : NearbyInteractables)
+	for (const TWeakObjectPtr<UInteractableComponent>&InteractablePtr : NearbyInteractables)
 	{
-		if (!IsValid(Interactable)){ continue; }
+		UInteractableComponent* Interactable = InteractablePtr.Get();
+
+		if (!IsValid(Interactable))
+		{
+			continue;
+		}
 
 		const FVector TargetLocation =
 			Interactable->GetComponentLocation();
@@ -104,8 +113,7 @@ void UInteractionComponent::UpdateVisibleInteractables()
 
 		if (Distance > MaxInteractionDistance) { continue; }
 
-		const FVector DirectionToTarget =
-			(TargetLocation - ViewLocation).GetSafeNormal();
+		const FVector DirectionToTarget = (TargetLocation - ViewLocation).GetSafeNormal();
 
 		const float Dot = FVector::DotProduct(ForwardVector,DirectionToTarget);
 
@@ -139,10 +147,10 @@ void UInteractionComponent::UpdateVisibleInteractables()
 
 void UInteractionComponent::UpdateHighlightState()
 {
-	// OFF 贸府
-	for (UInteractableComponent* Previous
-		: PreviousVisibleInteractables)
+	// Highlight OFF
+	for (const TWeakObjectPtr<UInteractableComponent>&PreviousPtr: PreviousVisibleInteractables)
 	{
+		UInteractableComponent* Previous =	PreviousPtr.Get();
 		if (!IsValid(Previous))
 		{
 			continue;
@@ -153,8 +161,7 @@ void UInteractionComponent::UpdateHighlightState()
 				[Previous](
 					const FInteractionCandidate& Candidate)
 				{
-					return Candidate.Interactable
-						== Previous;
+					return Candidate.Interactable.Get() == Previous;
 				});
 
 		if (!bStillVisible)
@@ -163,35 +170,33 @@ void UInteractionComponent::UpdateHighlightState()
 		}
 	}
 
-	// ON 贸府
-	for (const FInteractionCandidate& Candidate
-		: VisibleInteractables)
+	// Hightlight ON
+	for (const FInteractionCandidate& Candidate: VisibleInteractables)
 	{
-		if (!IsValid(Candidate.Interactable))
+		if (!Candidate.Interactable.IsValid())
 		{
 			continue;
 		}
 
-		if (!PreviousVisibleInteractables.Contains(
-			Candidate.Interactable))
+		UInteractableComponent* Interactable =	Candidate.Interactable.Get();
+
+		if (!PreviousVisibleInteractables.Contains(Candidate.Interactable.Get()))
 		{
-			Candidate.Interactable
-				->SetHighlighted(true);
+			Interactable->SetHighlighted(true);
 		}
 	}
 
+	// Update PreviousVisibleInteractables
 	PreviousVisibleInteractables.Empty();
 
-	for (const FInteractionCandidate& Candidate
-		: VisibleInteractables)
+	for (const FInteractionCandidate& Candidate: VisibleInteractables)
 	{
-		if (!IsValid(Candidate.Interactable))
+		if (!Candidate.Interactable.IsValid())
 		{
 			continue;
 		}
 
-		PreviousVisibleInteractables.Add(
-			Candidate.Interactable);
+		PreviousVisibleInteractables.Add(Candidate.Interactable);
 	}
 }
 
